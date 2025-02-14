@@ -3,21 +3,23 @@ import 'package:absensi_app/models/login.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-final urlToken = 'http://127.0.0.1:8000/token';
+final urlToken = 'http://192.168.1.112:8000/token';
 
 Future<bool> loginUser(Login loginData) async {
   final response = await http.post(
-    Uri.parse("http://10.10.104.102:8000/token"), // Adjust based on your server
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control_Allow_Origin": "*"
+    Uri.parse(urlToken),
+    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+    body: {
+      "username": loginData.username,
+      "password": loginData.password,
     },
-    body: jsonEncode(loginData.toJson()), // Convert model to JSON
   );
-
-  if (response.statusCode == 202) {
+  if (response.statusCode == 201) {
     final data = jsonDecode(response.body);
-    final token = data['acess_token'];
+    final String? token = data['access_token'];
+    if (token == null) {
+      return false;
+    }
 
     //Simpan Token
     final prefs = await SharedPreferences.getInstance();

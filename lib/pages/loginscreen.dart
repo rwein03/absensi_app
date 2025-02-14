@@ -1,6 +1,7 @@
 import 'package:absensi_app/AppStyle.dart';
 import 'package:absensi_app/models/login.dart';
-import 'package:absensi_app/pages/buttonlogin.dart';
+import 'package:absensi_app/widgets/login/buttonlogin.dart';
+import 'package:logger/logger.dart';
 import 'package:absensi_app/services/login.dart';
 import 'package:absensi_app/widgets/login/editLogin.dart';
 import 'package:flutter/material.dart';
@@ -15,15 +16,17 @@ class LoginPages extends StatefulWidget {
 class _LoginPagesState extends State<LoginPages> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  var logger = Logger();
 
   void handleLogin() async {
     Login loginData = Login(
-        username: usernameController.text, password: passwordController.text);
+        username: usernameController.value.text.trim(),
+        password: passwordController.value.text.trim());
     bool success = await loginUser(loginData);
     if (success) {
-      print("Login successful!");
+      logger.i("Login successful!");
     } else {
-      print("Login failed. Check credentials.");
+      logger.f("Login failed. Check credentials.");
     }
   }
 

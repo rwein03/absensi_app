@@ -24,6 +24,7 @@ class _EditloginWidgetState extends State<EditloginWidget> {
   Widget build(BuildContext context) {
     return TextFormField(
       obscureText: widget.isPassword,
+      controller: widget.controller,
       decoration: InputDecoration(
         prefixIcon: Icon(widget.icon),
         labelText: widget.labelText,
