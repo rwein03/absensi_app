@@ -1,8 +1,9 @@
 import 'package:absensi_app/AppStyle.dart';
-import 'package:absensi_app/models/login.dart';
+import 'package:absensi_app/models/loginModel.dart';
+import 'package:absensi_app/pages/dashboard.dart';
 import 'package:absensi_app/widgets/login/buttonlogin.dart';
 import 'package:logger/logger.dart';
-import 'package:absensi_app/services/login.dart';
+import 'package:absensi_app/services/loginService.dart';
 import 'package:absensi_app/widgets/login/editLogin.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,11 @@ class _LoginPagesState extends State<LoginPages> {
     bool success = await loginUser(loginData);
     if (success) {
       logger.i("Login successful!");
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => homeScreen(),
+          ));
     } else {
       logger.f("Login failed. Check credentials.");
     }
