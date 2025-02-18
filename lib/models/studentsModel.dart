@@ -6,7 +6,7 @@ class Students {
   DateTime dateOfBirth;
   String parentContact;
   String status;
-  List<dynamic> attendances;
+  List<Attendance> attendances;
 
   Students({
     required this.firstName,
@@ -27,7 +27,8 @@ class Students {
         dateOfBirth: DateTime.parse(json["date_of_birth"]),
         parentContact: json["parent_contact"],
         status: json["status"],
-        attendances: List<dynamic>.from(json["attendances"].map((x) => x)),
+        attendances: List<Attendance>.from(
+            json["attendances"].map((x) => Attendance.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -39,6 +40,43 @@ class Students {
             "${dateOfBirth.year.toString().padLeft(4, '0')}-${dateOfBirth.month.toString().padLeft(2, '0')}-${dateOfBirth.day.toString().padLeft(2, '0')}",
         "parent_contact": parentContact,
         "status": status,
-        "attendances": List<dynamic>.from(attendances.map((x) => x)),
+        "attendances": List<dynamic>.from(attendances.map((x) => x.toJson())),
+      };
+}
+
+class Attendance {
+  int attendanceId;
+  int studentId;
+  DateTime date;
+  String status;
+  dynamic reason;
+  String supportingDocument;
+
+  Attendance({
+    required this.attendanceId,
+    required this.studentId,
+    required this.date,
+    required this.status,
+    required this.reason,
+    required this.supportingDocument,
+  });
+
+  factory Attendance.fromJson(Map<String, dynamic> json) => Attendance(
+        attendanceId: json["attendance_id"],
+        studentId: json["student_id"],
+        date: DateTime.parse(json["date"]),
+        status: json["status"],
+        reason: json["reason"],
+        supportingDocument: json["supporting_document"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "attendance_id": attendanceId,
+        "student_id": studentId,
+        "date":
+            "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
+        "status": status,
+        "reason": reason,
+        "supporting_document": supportingDocument,
       };
 }

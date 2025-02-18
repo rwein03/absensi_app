@@ -1,4 +1,5 @@
 import 'package:absensi_app/pages/dashboard.dart';
+import 'package:absensi_app/pages/studentattendance.dart';
 import 'package:absensi_app/pages/studentsScreen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +12,13 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends State<NavigationPage> {
-  int currentindex = 0;
-  GlobalKey<CurvedNavigationBarState> _bottomNavigationBar = GlobalKey();
+  int currentindex = 1;
+  final GlobalKey<CurvedNavigationBarState> _bottomNavigationBar = GlobalKey();
 
   static const List<Widget> _pages = <Widget>[
-    homeScreen(),
     studentsPage(),
+    homeScreen(),
+    StudentattendancePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -39,8 +41,9 @@ class _NavigationPageState extends State<NavigationPage> {
         key: _bottomNavigationBar,
         index: currentindex,
         items: [
-          Icon(Icons.home, size: 20),
           Icon(Icons.person_add_alt_outlined, size: 20),
+          Icon(Icons.home, size: 20),
+          Icon(Icons.access_time, size: 20),
         ],
         color: Colors.white,
         buttonBackgroundColor: Colors.white,
