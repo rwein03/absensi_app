@@ -1,6 +1,8 @@
+import 'package:absensi_app/AppStyle.dart';
 import 'package:absensi_app/models/studentsModel.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi_app/services/studentsService.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class homeScreen extends StatefulWidget {
   const homeScreen({super.key});
@@ -11,34 +13,39 @@ class homeScreen extends StatefulWidget {
 
 class _homeScreenState extends State<homeScreen> {
   late Future<List<Students>> getStudentDatas;
+  // late CalendarFormat _calendarFormat;
+  // late DateTime _focusedDay;
+  // late DateTime _selectedDay;
+  // Map<DateTime, List<String>> _event = {};
 
   @override
   void initState() {
+    super.initState();
     getStudentDatas = getsStudents();
+    // _calendarFormat = CalendarFormat.month;
+    // _focusedDay = DateTime.now();
+    // _selectedDay = _focusedDay;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-        future: getStudentDatas,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No speakers found'));
-          }
-          final students = snapshot.data!;
-          return ListView.builder(
-            itemCount: students.length,
-            itemBuilder: (context, index) {
-              final student = students[index];
-              return Text(student.firstName);
-            },
-          );
-        },
+      body: Container(
+        decoration: AppStyle.decoration,
+        // child: TableCalendar(
+        //   focusedDay: _focusedDay,
+        //   firstDay: DateTime(2020),
+        //   lastDay: DateTime(2030),
+        //   calendarFormat: _calendarFormat,
+        //   selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+        //   onDaySelected: (selectedDay, focusedDay) {
+        //     setState(() {
+        //       _selectedDay = selectedDay;
+        //       _focusedDay = focusedDay;
+        //     });
+        //   },
+        //   eventLoader: null,
+        // ),
       ),
     );
   }

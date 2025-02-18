@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:absensi_app/models/studentsModel.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:logger/web.dart';
+import 'auth.dart';
 
 final urlString = "http://10.10.104.102:8000/students";
 
 Future<List<Students>> getsStudents() async {
-  final prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString('token');
+  final token = await Auth().getToken();
+  Logger().i(token);
 
   final response = await http.get(
     Uri.parse(urlString),

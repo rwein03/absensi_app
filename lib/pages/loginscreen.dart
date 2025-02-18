@@ -1,6 +1,7 @@
 import 'package:absensi_app/AppStyle.dart';
 import 'package:absensi_app/models/loginModel.dart';
 import 'package:absensi_app/pages/dashboard.dart';
+import 'package:absensi_app/widgets/alertdialog.dart';
 import 'package:absensi_app/widgets/login/buttonlogin.dart';
 import 'package:logger/logger.dart';
 import 'package:absensi_app/services/loginService.dart';
@@ -19,20 +20,21 @@ class _LoginPagesState extends State<LoginPages> {
   TextEditingController passwordController = TextEditingController();
   var logger = Logger();
 
-  void handleLogin() async {
+  Future<bool> handleLogin() async {
     Login loginData = Login(
         username: usernameController.value.text.trim(),
         password: passwordController.value.text.trim());
     bool success = await loginUser(loginData);
     if (success) {
-      logger.i("Login successful!");
       Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => homeScreen(),
           ));
+      return true;
     } else {
-      logger.f("Login failed. Check credentials.");
+      alertDialog(context, "Wrong username or password!");
+      return false;
     }
   }
 
@@ -78,7 +80,12 @@ class _LoginPagesState extends State<LoginPages> {
                 isPassword: true,
               ),
               buttonLogin(
-                () => handleLogin(),
+                () async {
+                  final success = await handleLogin();
+                  if (success) {
+                    setState(() {});
+                  }
+                },
               )
             ],
           ),
