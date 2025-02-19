@@ -31,7 +31,6 @@ class _homeScreenState extends State<homeScreen> {
         }
       }
     }
-    // print(absentDays);
   }
 
   @override
