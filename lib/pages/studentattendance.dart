@@ -1,5 +1,7 @@
 import 'package:absensi_app/AppStyle.dart';
+import 'package:absensi_app/models/storeData.dart';
 import 'package:absensi_app/models/studentsModel.dart';
+import 'package:absensi_app/services/attendanceService.dart';
 import 'package:absensi_app/services/studentsService.dart';
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
@@ -13,7 +15,7 @@ class StudentattendancePage extends StatefulWidget {
 
 class _StudentattendancePageState extends State<StudentattendancePage> {
   late Future<List<Students>> getStudentDatas;
-  GroupButtonController controllerGroup = GroupButtonController();
+  List<Storedata> listabsent = [];
   DateTime today = DateTime.now();
 
   @override
@@ -46,6 +48,15 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
                     itemCount: students.length,
                     itemBuilder: (context, index) {
                       final student = students[index];
+                      var dateListAbsents = student.attendances
+                          .where(
+                            (element) => element.date == today,
+                          )
+                          .toList();
+                      if (dateListAbsents.isNotEmpty) {
+                        return Center(
+                            child: Text("Already absences on this day"));
+                      }
                       return Padding(
                         padding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -63,7 +74,19 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
                                 ),
                                 GroupButton(
                                   isRadio: true,
-                                  // controller: controllerGroup,
+                                  onSelected: (value, index, isSelected) {
+                                    String reasson = "student.student_id";
+                                    listabsent.removeWhere(
+                                      (element) =>
+                                          element.student_id ==
+                                          student.student_id,
+                                    );
+                                    listabsent.add(Storedata(
+                                        student_id: student.student_id,
+                                        date: DateTime.now(),
+                                        status: value,
+                                        reasson: reasson));
+                                  },
                                   enableDeselect: true,
                                   options: GroupButtonOptions(
                                       borderRadius: BorderRadius.circular(12)),
@@ -74,7 +97,7 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
                                 )
                               ],
                             ),
-                            Divider()
+                            Divider(),
                           ],
                         ),
                       );
@@ -83,11 +106,27 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
                 },
               ),
             ),
-            Container(
-                child: ElevatedButton(onPressed: () {}, child: Text("Submit")))
+            ElevatedButton(
+                onPressed: () {
+                  SendData(listabsent);
+                },
+                child: Text("data"))
           ],
         ),
       ),
     );
   }
+}
+
+Future<void> SendData(List<Storedata> listabsent) async {
+  final attendance = Attendance(
+    studentId: 2,
+    date: DateTime.now(),
+    status: 'Late',
+    reason: 'Sick',
+    supportingDocument: null,
+  );
+
+  final result = await postAttendance(attendance);
+  print('Test Result: $result');
 }
