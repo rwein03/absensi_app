@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 Future<bool> postAttendance(Attendance attendance) async {
   final token = await Auth().getToken();
   final response = await http.post(
-    Uri.parse(Auth().api).replace(path: '/attendance/create'),
+    Uri.parse('${Auth().api}/attendance/create/'),
     headers: {
       'accept': 'application/json',
       'Content-Type': 'application/json',
@@ -16,10 +16,8 @@ Future<bool> postAttendance(Attendance attendance) async {
     body: jsonEncode(attendance.toJson()),
   );
   if (response.statusCode == 201) {
-    print('created');
     return true;
   } else {
-    print('Error: ${response.statusCode}, Body: ${response.body}');
     return false;
   }
 }

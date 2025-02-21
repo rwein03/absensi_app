@@ -53,7 +53,7 @@ class _homeScreenState extends State<homeScreen> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          decoration: AppStyle.decoration,
+          // decoration: AppStyle.decoration,
           child: Column(
             children: [
               TableCalendar(
@@ -71,7 +71,6 @@ class _homeScreenState extends State<homeScreen> {
                 eventLoader: (day) {
                   DateTime normalizedDay =
                       DateTime(day.year, day.month, day.day);
-                  // print("Checking events for day: $normalizedDay");
                   return absentDays[normalizedDay]
                           ?.map((e) => e.name!)
                           .toList() ??
@@ -86,16 +85,10 @@ class _homeScreenState extends State<homeScreen> {
                     ? ListView.builder(
                         itemCount: absentDays[DateTime(_selectedDay.year,
                                 _selectedDay.month, _selectedDay.day)]!
-                            .where(
-                              (element) => element.status == 'Late',
-                            )
                             .length,
                         itemBuilder: (context, index) {
-                          var getlate = absentDays[DateTime(_selectedDay.year,
+                          var datas = absentDays[DateTime(_selectedDay.year,
                                   _selectedDay.month, _selectedDay.day)]!
-                              .where(
-                                (element) => element.status == 'Late',
-                              )
                               .toList();
                           return Container(
                             margin: EdgeInsets.symmetric(
@@ -104,10 +97,16 @@ class _homeScreenState extends State<homeScreen> {
                                 border: Border.all(width: 1),
                                 borderRadius: BorderRadius.circular(5)),
                             child: ListTile(
-                              title: Text(getlate[index].name),
-                              subtitle:
-                                  Text("Status: ${getlate[index].status}"),
-                              leading: Icon(Icons.warning, color: Colors.red),
+                              title: Text(datas[index].name),
+                              subtitle: Text("Status: ${datas[index].status}"),
+                              leading: Icon(Icons.warning,
+                                  color: datas[index].status == "Absent"
+                                      ? Colors.red
+                                      : datas[index].status == "Late"
+                                          ? Colors.yellow
+                                          : datas[index].status == "Excused"
+                                              ? Colors.blue
+                                              : Colors.green),
                             ),
                           );
                         },

@@ -28,7 +28,7 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: AppStyle.decoration,
+        // decoration: AppStyle.decoration,
         child: Column(
           children: [
             Expanded(
@@ -45,72 +45,72 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
                   final students = snapshot.data!;
                   if (snapshot.connectionState == ConnectionState.waiting) {}
                   return ListView.builder(
-                    itemCount: students.length,
-                    itemBuilder: (context, index) {
-                      final student = students[index];
-                      var dateListAbsents = student.attendances
-                          .where(
-                            (element) => element.date == today,
-                          )
-                          .toList();
-                      if (dateListAbsents.isNotEmpty) {
-                        return Center(
-                            child: Text("Already absences on this day"));
-                      }
-                      return Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                        child: Column(
-                          children: [
-                            Row(
+                      itemCount: students.length,
+                      itemBuilder: (context, index) {
+                        final student = students[index];
+                        var dateListAbsents = student.attendances.where(
+                          (element) {
+                            return element.date == DateUtils.dateOnly(today);
+                            ;
+                          },
+                        ).toList();
+                        if (dateListAbsents.isNotEmpty) {
+                          return Center(
+                              child: Text("Already absences on this day"));
+                        } else {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12),
+                            child: Column(
                               children: [
-                                Text(
-                                  "${student.firstName} ${student.lastName}",
-                                  style:
-                                      AppStyle.subTitle.copyWith(fontSize: 18),
-                                ),
-                                Expanded(
-                                  child: SizedBox(),
-                                ),
-                                GroupButton(
-                                  isRadio: true,
-                                  onSelected: (value, index, isSelected) {
-                                    String reasson = "student.student_id";
-                                    listabsent.removeWhere(
-                                      (element) =>
-                                          element.student_id ==
-                                          student.student_id,
-                                    );
-                                    listabsent.add(Storedata(
-                                        student_id: student.student_id,
-                                        date: DateTime.now(),
-                                        status: value,
-                                        reasson: reasson));
-                                  },
-                                  enableDeselect: true,
-                                  options: GroupButtonOptions(
-                                      borderRadius: BorderRadius.circular(12)),
-                                  buttons: [
-                                    "Absent",
-                                    "Excused",
+                                Row(
+                                  children: [
+                                    Text(
+                                      "${student.firstName} ${student.lastName}",
+                                      style: AppStyle.subTitle
+                                          .copyWith(fontSize: 18),
+                                    ),
+                                    Expanded(
+                                      child: SizedBox(),
+                                    ),
+                                    GroupButton(
+                                      isRadio: true,
+                                      onSelected: (value, index, isSelected) {
+                                        String reasson = "student.student_id";
+                                        listabsent.removeWhere(
+                                          (element) =>
+                                              element.student_id ==
+                                              student.student_id,
+                                        );
+                                        listabsent.add(Storedata(
+                                            student_id: student.student_id,
+                                            date: DateTime.now(),
+                                            status: value,
+                                            reasson: reasson));
+                                      },
+                                      enableDeselect: true,
+                                      options: GroupButtonOptions(
+                                          buttonHeight: 40,
+                                          buttonWidth: 65,
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
+                                      buttons: [
+                                        "Absent",
+                                        "Late",
+                                        "Excused",
+                                      ],
+                                    )
                                   ],
-                                )
+                                ),
+                                Divider(),
                               ],
                             ),
-                            Divider(),
-                          ],
-                        ),
-                      );
-                    },
-                  );
+                          );
+                        }
+                      });
                 },
               ),
             ),
-            ElevatedButton(
-                onPressed: () {
-                  SendData(listabsent);
-                },
-                child: Text("data"))
           ],
         ),
       ),
@@ -119,14 +119,19 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
 }
 
 Future<void> SendData(List<Storedata> listabsent) async {
-  final attendance = Attendance(
-    studentId: 2,
-    date: DateTime.now(),
-    status: 'Late',
-    reason: 'Sick',
-    supportingDocument: null,
-  );
+  final futures = listabsent
+      .map(
+        (element) => postAttendance(
+          Attendance(
+            student_id: element.student_id,
+            date: element.date,
+            status: element.status,
+            reason: element.reasson,
+            supportingDocument: element.supporting_document,
+          ),
+        ),
+      )
+      .toList();
 
-  final result = await postAttendance(attendance);
-  print('Test Result: $result');
+  final results = await Future.wait(futures);
 }

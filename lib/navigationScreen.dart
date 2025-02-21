@@ -47,7 +47,7 @@ class _NavigationPageState extends State<NavigationPage> {
         ],
         color: Colors.white,
         buttonBackgroundColor: Colors.white,
-        backgroundColor: const Color.fromARGB(255, 68, 138, 255),
+        backgroundColor: const Color.fromARGB(255, 170, 170, 170),
         animationCurve: Curves.easeIn,
         animationDuration: Duration(milliseconds: 400),
         onTap: _onItemTapped);

@@ -48,14 +48,14 @@ class Students {
 }
 
 class Attendance {
-  int studentId;
+  int student_id;
   DateTime date;
   String status;
   dynamic reason;
   String? supportingDocument;
 
   Attendance({
-    required this.studentId,
+    required this.student_id,
     required this.date,
     required this.status,
     required this.reason,
@@ -63,7 +63,7 @@ class Attendance {
   });
 
   factory Attendance.fromJson(Map<String, dynamic> json) => Attendance(
-        studentId: json["student_id"],
+        student_id: json["student_id"],
         date: DateTime.parse(json["date"]),
         status: json["status"],
         reason: json["reason"],
@@ -71,8 +71,8 @@ class Attendance {
       );
 
   Map<String, dynamic> toJson() => {
-        'student_id': studentId,
-        'date': date.toIso8601String(),
+        'student_id': student_id,
+        'date': date.toIso8601String().split('T')[0],
         'status': status,
         'reason': reason,
         'supporting_document': supportingDocument,
