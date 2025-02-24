@@ -72,7 +72,7 @@ class _homeScreenState extends State<homeScreen> {
                   DateTime normalizedDay =
                       DateTime(day.year, day.month, day.day);
                   return absentDays[normalizedDay]
-                          ?.map((e) => e.name!)
+                          ?.map((e) => e.name)
                           .toList() ??
                       [];
                 },

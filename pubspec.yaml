@@ -43,6 +43,7 @@ dependencies:
   table_calendar: ^3.0.9
   lottie: ^3.3.1
   group_button: ^5.3.4
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:
