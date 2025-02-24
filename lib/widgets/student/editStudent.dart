@@ -1,3 +1,4 @@
+import 'package:absensi_app/AppStyle.dart';
 import 'package:flutter/material.dart';
 
 class editStudentWidget extends StatefulWidget {
@@ -19,13 +20,30 @@ class editStudentWidget extends StatefulWidget {
 class _editStudentWidgetState extends State<editStudentWidget> {
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      obscureText: widget.obstruct,
-      controller: widget.controller,
-      decoration: InputDecoration(
-          prefixIcon: Icon(widget.icon),
-          label: Text(widget.title),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 5,
+      children: [
+        Text(
+          widget.title,
+          style: AppStyle.smalltitle,
+        ),
+        TextFormField(
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Please fill ${widget.title}";
+            }
+            return null;
+          },
+          obscureText: widget.obstruct,
+          controller: widget.controller,
+          decoration: InputDecoration(
+              prefixIcon: Icon(widget.icon),
+              hintText: widget.title,
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(5))),
+        ),
+      ],
     );
   }
 }

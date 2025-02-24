@@ -1,7 +1,11 @@
+// ignore_for_file: file_names, camel_case_types, deprecated_member_use, non_constant_identifier_names, unused_import
+
 import 'package:absensi_app/AppStyle.dart';
-import 'package:absensi_app/widgets/student/dropdownlist.dart';
+import 'package:absensi_app/widgets/student/datetimepicker.dart';
+import 'package:absensi_app/widgets/student/dropdownstudent.dart';
 import 'package:absensi_app/widgets/student/editStudent.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class studentsPage extends StatefulWidget {
   const studentsPage({super.key});
@@ -14,102 +18,135 @@ class _studentsPageState extends State<studentsPage> {
   TextEditingController firstname = TextEditingController();
   TextEditingController lastname = TextEditingController();
   TextEditingController parentcontact = TextEditingController();
+  TextEditingController datepicker = TextEditingController();
 
   final List<String> grades = ["1", "2", "3", "4", "5", "6"];
   final List<String> section = ["A", "B", "C"];
+  final List<String> isActive = ["Active", "Inactive"];
   String? selectedgrade;
   String? selectedsection;
+  String? selectedActive;
   DateTime? selectedDate;
 
-  Future<void> _selectDate() async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime(2021, 7, 25),
-      firstDate: DateTime(2021),
-      lastDate: DateTime(2022),
-    );
+  final _formKey = GlobalKey<FormState>();
 
-    setState(() {
-      selectedDate = pickedDate;
-    });
+  void checkValid() {
+    if (_formKey.currentState!.validate()) {
+      Logger().i(
+          '${firstname.text.trim()}, ${lastname.text.trim()}, ${parentcontact.text.trim()}, ${datepicker.text.trim()}');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        // decoration: AppStyle.decoration,
-        // padding: EdgeInsets.all(12),
-        margin: EdgeInsets.all(12),
-        child: Column(
-          spacing: 12,
-          children: [
-            editStudentWidget(
-              title: "Firstname",
-              icon: Icons.person_pin,
-              obstruct: false,
-              controller: firstname,
-            ),
-            editStudentWidget(
-              title: "lastname",
-              icon: Icons.person_pin,
-              obstruct: false,
-              controller: lastname,
-            ),
-            Row(
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Form(
+        key: _formKey,
+        child: Center(
+          child: Container(
+            padding: EdgeInsets.all(30),
+            margin: EdgeInsets.all(30),
+            decoration: BoxDecoration(
+                border: Border.all(width: 1),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    offset: Offset(0, 1),
+                    blurRadius: 5,
+                    spreadRadius: 2,
+                  ),
+                ],
+                borderRadius: BorderRadius.circular(15)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               spacing: 12,
               children: [
                 Text(
-                  "Grade",
-                  style: AppStyle.button,
+                  "Register Student Form",
+                  style: AppStyle.formTitle,
                 ),
-                dropdownitem(
-                  listitem: grades,
-                  onChanged: (value) {
+                Row(
+                  spacing: 5,
+                  children: [
+                    Flexible(
+                      child: editStudentWidget(
+                        title: "Firstname",
+                        icon: Icons.person_pin,
+                        obstruct: false,
+                        controller: firstname,
+                      ),
+                    ),
+                    Flexible(
+                      child: editStudentWidget(
+                        title: "lastname",
+                        icon: Icons.person_pin,
+                        obstruct: false,
+                        controller: lastname,
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  spacing: 12,
+                  children: [
+                    Flexible(
+                      child: dropdownstudent(
+                        listitem: grades,
+                        titlebox: 'Grade',
+                        onChanged: (value) {
+                          setState(() {
+                            selectedgrade = value;
+                          });
+                        },
+                      ),
+                    ),
+                    Flexible(
+                      child: dropdownstudent(
+                        listitem: section,
+                        titlebox: 'Section',
+                        onChanged: (value) {
+                          setState(() {
+                            selectedsection = value;
+                          });
+                        },
+                      ),
+                    )
+                  ],
+                ),
+                Datetimepicker(
+                    controller: datepicker, title: 'Date of Birthday'),
+                editStudentWidget(
+                  title: "Parent contact",
+                  icon: Icons.person_pin,
+                  obstruct: false,
+                  controller: parentcontact,
+                ),
+                dropdownstudent(
+                  listitem: isActive,
+                  titlebox: "Status",
+                  onChanged: (Value) {
                     setState(() {
-                      selectedgrade = value;
+                      selectedActive = Value;
                     });
                   },
                 ),
-                Text(
-                  "Section",
-                  style: AppStyle.button,
-                ),
-                dropdownitem(
-                  listitem: section,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedsection = value;
-                    });
-                  },
+                ElevatedButton(
+                  onPressed: () => checkValid(),
+                  style: ElevatedButton.styleFrom(
+                    fixedSize:
+                        Size.fromWidth(AppStyle(context).widthScreen / 2),
+                    backgroundColor: Colors.blueGrey.shade50,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text("Save"),
                 )
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Date of Birthday",
-                  style: AppStyle.button,
-                ),
-                TextButton(
-                    onPressed: _selectDate,
-                    child: Text(
-                      selectedDate != null
-                          ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
-                          : 'No date selected',
-                    )),
-              ],
-            ),
-            editStudentWidget(
-              title: "parent contact",
-              icon: Icons.person_pin,
-              obstruct: false,
-              controller: parentcontact,
-            ),
-          ],
+          ),
         ),
       ),
     );

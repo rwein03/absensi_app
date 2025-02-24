@@ -1,4 +1,5 @@
-import 'package:absensi_app/AppStyle.dart';
+// ignore_for_file: camel_case_types
+
 import 'package:absensi_app/models/dataCalender.dart';
 import 'package:absensi_app/models/studentsModel.dart';
 import 'package:flutter/material.dart';

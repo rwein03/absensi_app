@@ -44,6 +44,7 @@ dependencies:
   lottie: ^3.3.1
   group_button: ^5.3.4
   dropdown_button2: ^2.3.9
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
