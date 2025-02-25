@@ -51,9 +51,10 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
+                    return Center(
+                        child: Text('Error: Failed Connect to server'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No speakers found'));
+                    return Center(child: Text('No Student found'));
                   }
                   final students = snapshot.data!;
                   if (snapshot.connectionState == ConnectionState.waiting) {}
