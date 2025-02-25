@@ -9,6 +9,7 @@ import 'package:absensi_app/services/loginService.dart';
 import 'package:absensi_app/widgets/login/editLogin.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:quickalert/quickalert.dart';
 
 class LoginPages extends StatefulWidget {
   const LoginPages({super.key});
@@ -35,7 +36,8 @@ class _LoginPagesState extends State<LoginPages> with TickerProviderStateMixin {
           ));
       return true;
     } else {
-      alertDialog(context, "Wrong username or password!");
+      alertDialog(context, "Error", "Wrong username or password!",
+          QuickAlertType.error);
       return false;
     }
   }
@@ -50,6 +52,8 @@ class _LoginPagesState extends State<LoginPages> with TickerProviderStateMixin {
   void dispose() {
     super.dispose();
     _controller.dispose();
+    passwordController.dispose();
+    usernameController.dispose();
   }
 
   @override

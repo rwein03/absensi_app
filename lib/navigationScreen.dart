@@ -45,7 +45,7 @@ class _NavigationPageState extends State<NavigationPage> {
           Icon(Icons.home, size: 20),
           Icon(Icons.access_time, size: 20),
         ],
-        color: const Color.fromARGB(255, 138, 133, 133),
+        color: const Color.fromARGB(255, 233, 231, 231),
         buttonBackgroundColor: Colors.white,
         backgroundColor: const Color.fromARGB(255, 254, 247, 255),
         animationCurve: Curves.easeIn,

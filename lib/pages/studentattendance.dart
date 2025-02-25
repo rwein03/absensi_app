@@ -61,7 +61,7 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
                       itemCount: students.length,
                       itemBuilder: (context, index) {
                         final student = students[index];
-                        var dateListAbsents = student.attendances.where(
+                        var dateListAbsents = student.attendances!.where(
                           (element) {
                             return element.date == DateUtils.dateOnly(today);
                           },
@@ -92,7 +92,7 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
                                             student.student_id,
                                       );
                                       listabsent.add(Storedata(
-                                          student_id: student.student_id,
+                                          student_id: student.student_id!,
                                           date: DateTime.now(),
                                           status: value,
                                           reasson: reasson));

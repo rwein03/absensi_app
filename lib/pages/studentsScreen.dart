@@ -1,11 +1,16 @@
 // ignore_for_file: file_names, camel_case_types, deprecated_member_use, non_constant_identifier_names, unused_import
 
 import 'package:absensi_app/AppStyle.dart';
+import 'package:absensi_app/models/studentsModel.dart';
+import 'package:absensi_app/services/studentsService.dart';
+import 'package:absensi_app/widgets/alertdialog.dart';
 import 'package:absensi_app/widgets/student/datetimepicker.dart';
 import 'package:absensi_app/widgets/student/dropdownstudent.dart';
 import 'package:absensi_app/widgets/student/editStudent.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:quickalert/quickalert.dart';
 
 class studentsPage extends StatefulWidget {
   const studentsPage({super.key});
@@ -30,11 +35,43 @@ class _studentsPageState extends State<studentsPage> {
 
   final _formKey = GlobalKey<FormState>();
 
-  void checkValid() {
+  Future<void> checkValid() async {
     if (_formKey.currentState!.validate()) {
-      Logger().i(
-          '${firstname.text.trim()}, ${lastname.text.trim()}, ${parentcontact.text.trim()}, ${datepicker.text.trim()}');
+      final studentPost = await insertStudent(Students(
+        firstName: firstname.text,
+        lastName: lastname.text,
+        grade: selectedgrade.toString(),
+        section: selectedsection.toString(),
+        dateOfBirth: DateFormat("yyyy-MM-dd").parse(datepicker.text),
+        parentContact: parentcontact.text,
+        status: selectedActive.toString(),
+        attendances: [],
+      ));
+      if (studentPost) {
+        clear();
+        alertDialog(
+            context, "Confirmation", "Student added", QuickAlertType.info);
+      } else {}
     }
+  }
+
+  void clear() {
+    firstname.clear();
+    lastname.clear();
+    parentcontact.clear();
+    datepicker.clear();
+    selectedgrade = null;
+    selectedsection = null;
+    selectedActive = null;
+  }
+
+  @override
+  void dispose() {
+    firstname.dispose();
+    lastname.dispose();
+    parentcontact.dispose();
+    datepicker.dispose();
+    super.dispose();
   }
 
   @override
@@ -81,7 +118,7 @@ class _studentsPageState extends State<studentsPage> {
                     Flexible(
                       child: editStudentWidget(
                         title: "lastname",
-                        icon: Icons.person_pin,
+                        icon: Icons.numbers,
                         obstruct: false,
                         controller: lastname,
                       ),
@@ -119,7 +156,7 @@ class _studentsPageState extends State<studentsPage> {
                     controller: datepicker, title: 'Date of Birthday'),
                 editStudentWidget(
                   title: "Parent contact",
-                  icon: Icons.person_pin,
+                  icon: Icons.numbers,
                   obstruct: false,
                   controller: parentcontact,
                 ),

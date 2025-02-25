@@ -24,7 +24,7 @@ class _homeScreenState extends State<homeScreen> {
     absentDays.clear();
     for (var attendance in studentlist) {
       if (attendance.status.isNotEmpty) {
-        for (var e in attendance.attendances) {
+        for (var e in attendance.attendances ?? []) {
           DateTime date = DateTime(e.date.year, e.date.month, e.date.day);
           absentDays[date] = absentDays[date] ?? [];
           absentDays[date]!
