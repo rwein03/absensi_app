@@ -45,6 +45,7 @@ class _studentsPageState extends State<studentsPage> {
         dateOfBirth: DateFormat("yyyy-MM-dd").parse(datepicker.text),
         parentContact: parentcontact.text,
         status: selectedActive.toString(),
+        class_id: 2,
         attendances: [],
       ));
       if (studentPost) {

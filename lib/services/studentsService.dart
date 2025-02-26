@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'package:absensi_app/models/studentsModel.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'auth.dart';
 
 Future<List<Students>> getsStudents() async {
@@ -15,7 +16,6 @@ Future<List<Students>> getsStudents() async {
   );
   if (response.statusCode == 200) {
     List<dynamic> jsonData = jsonDecode(response.body);
-    // Logger().i(response.body);
     return jsonData.map((e) => Students.fromJson(e)).toList();
   } else {
     throw Exception("Failed to load students");
@@ -36,6 +36,7 @@ Future<bool> insertStudent(Students students) async {
   if (response.statusCode == 201) {
     return true;
   } else {
+    Logger().i(response.body);
     return false;
   }
 }

@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<bool> loginUser(Login loginData) async {
   final response = await http.post(
-    Uri.parse(Auth().api).replace(path: '/token'),
+    Uri.parse(Auth().api).replace(path: '/login'),
     headers: {"Content-Type": "application/x-www-form-urlencoded"},
     body: {
       "username": loginData.username,

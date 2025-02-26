@@ -9,6 +9,7 @@ class Students {
   DateTime dateOfBirth;
   String parentContact;
   String status;
+  int class_id;
   List<Attendance>? attendances;
 
   Students({
@@ -20,6 +21,7 @@ class Students {
     required this.dateOfBirth,
     required this.parentContact,
     required this.status,
+    required this.class_id,
     this.attendances,
   });
 
@@ -32,6 +34,7 @@ class Students {
         dateOfBirth: DateTime.parse(json["date_of_birth"]),
         parentContact: json["parent_contact"],
         status: json["status"],
+        class_id: json["class_id"],
         attendances: List<Attendance>.from(
                 json["attendances"].map((x) => Attendance.fromJson(x))) ??
             [],
@@ -47,6 +50,7 @@ class Students {
             "${dateOfBirth.year.toString().padLeft(4, '0')}-${dateOfBirth.month.toString().padLeft(2, '0')}-${dateOfBirth.day.toString().padLeft(2, '0')}",
         "parent_contact": parentContact,
         "status": status,
+        "class_id": class_id,
         "attendances": List<Attendance>.from((attendances ?? []).map((x) => x)),
       };
 }
