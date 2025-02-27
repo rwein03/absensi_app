@@ -1,12 +1,12 @@
 import 'package:absensi_app/AppStyle.dart';
 import 'package:flutter/material.dart';
 
-class editStudentWidget extends StatefulWidget {
+class EditTitleWidget extends StatefulWidget {
   final String title;
   final IconData icon;
   final bool obstruct;
   final TextEditingController controller;
-  const editStudentWidget(
+  const EditTitleWidget(
       {super.key,
       required this.title,
       required this.icon,
@@ -14,10 +14,10 @@ class editStudentWidget extends StatefulWidget {
       required this.controller});
 
   @override
-  State<editStudentWidget> createState() => _editStudentWidgetState();
+  State<EditTitleWidget> createState() => _EditTitleWidgetState();
 }
 
-class _editStudentWidgetState extends State<editStudentWidget> {
+class _EditTitleWidgetState extends State<EditTitleWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(

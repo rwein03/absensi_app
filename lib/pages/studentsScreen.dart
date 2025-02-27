@@ -4,9 +4,9 @@ import 'package:absensi_app/AppStyle.dart';
 import 'package:absensi_app/models/studentsModel.dart';
 import 'package:absensi_app/services/studentsService.dart';
 import 'package:absensi_app/widgets/alertdialog.dart';
+import 'package:absensi_app/widgets/dropdownitemlist.dart';
 import 'package:absensi_app/widgets/student/datetimepicker.dart';
-import 'package:absensi_app/widgets/student/dropdownstudent.dart';
-import 'package:absensi_app/widgets/student/editStudent.dart';
+import 'package:absensi_app/widgets/edittitle.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
@@ -109,7 +109,7 @@ class _studentsPageState extends State<studentsPage> {
                   spacing: 5,
                   children: [
                     Flexible(
-                      child: editStudentWidget(
+                      child: EditTitleWidget(
                         title: "Firstname",
                         icon: Icons.person_pin,
                         obstruct: false,
@@ -117,7 +117,7 @@ class _studentsPageState extends State<studentsPage> {
                       ),
                     ),
                     Flexible(
-                      child: editStudentWidget(
+                      child: EditTitleWidget(
                         title: "lastname",
                         icon: Icons.numbers,
                         obstruct: false,
@@ -127,10 +127,10 @@ class _studentsPageState extends State<studentsPage> {
                   ],
                 ),
                 Row(
-                  spacing: 12,
+                  spacing: 5,
                   children: [
                     Flexible(
-                      child: dropdownstudent(
+                      child: DropdownItemList(
                         listitem: grades,
                         titlebox: 'Grade',
                         onChanged: (value) {
@@ -141,7 +141,7 @@ class _studentsPageState extends State<studentsPage> {
                       ),
                     ),
                     Flexible(
-                      child: dropdownstudent(
+                      child: DropdownItemList(
                         listitem: section,
                         titlebox: 'Section',
                         onChanged: (value) {
@@ -155,13 +155,13 @@ class _studentsPageState extends State<studentsPage> {
                 ),
                 Datetimepicker(
                     controller: datepicker, title: 'Date of Birthday'),
-                editStudentWidget(
+                EditTitleWidget(
                   title: "Parent contact",
                   icon: Icons.numbers,
                   obstruct: false,
                   controller: parentcontact,
                 ),
-                dropdownstudent(
+                DropdownItemList(
                   listitem: isActive,
                   titlebox: "Status",
                   onChanged: (Value) {

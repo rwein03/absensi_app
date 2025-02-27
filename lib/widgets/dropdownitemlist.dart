@@ -2,21 +2,21 @@ import 'package:absensi_app/AppStyle.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
-class dropdownstudent extends StatefulWidget {
+class DropdownItemList extends StatefulWidget {
   final List<String> listitem;
   final String titlebox;
   final Function(String) onChanged;
-  const dropdownstudent(
+  const DropdownItemList(
       {super.key,
       required this.listitem,
       required this.titlebox,
       required this.onChanged});
 
   @override
-  State<dropdownstudent> createState() => _dropdownstudentState();
+  State<DropdownItemList> createState() => _DropdownItemListState();
 }
 
-class _dropdownstudentState extends State<dropdownstudent> {
+class _DropdownItemListState extends State<DropdownItemList> {
   String? selectedValue;
 
   @override

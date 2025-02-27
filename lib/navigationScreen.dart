@@ -47,8 +47,8 @@ class _NavigationPageState extends State<NavigationPage> {
         items: [
           Icon(Icons.person_add_alt_outlined, size: 20),
           Icon(Icons.class_, size: 20),
-          Icon(Icons.access_time, size: 20),
           Icon(Icons.home, size: 20),
+          Icon(Icons.access_time, size: 20),
           Icon(Icons.settings, size: 20),
         ],
         color: const Color.fromARGB(255, 233, 231, 231),
