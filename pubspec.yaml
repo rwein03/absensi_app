@@ -45,6 +45,7 @@ dependencies:
   group_button: ^5.3.4
   dropdown_button2: ^2.3.9
   intl: ^0.20.2
+  provider: ^6.1.0
 
 dev_dependencies:
   flutter_test:

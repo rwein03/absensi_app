@@ -3,12 +3,14 @@
 import 'package:absensi_app/AppStyle.dart';
 import 'package:absensi_app/models/loginModel.dart';
 import 'package:absensi_app/navigationScreen.dart';
+import 'package:absensi_app/provider/usersprovider.dart';
 import 'package:absensi_app/widgets/alertdialog.dart';
 import 'package:absensi_app/widgets/login/buttonlogin.dart';
 import 'package:absensi_app/services/loginService.dart';
 import 'package:absensi_app/widgets/login/editLogin.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
 
 class LoginPages extends StatefulWidget {

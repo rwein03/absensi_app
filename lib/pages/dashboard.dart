@@ -2,8 +2,10 @@
 
 import 'package:absensi_app/models/dataCalender.dart';
 import 'package:absensi_app/models/studentsModel.dart';
+import 'package:absensi_app/provider/usersprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi_app/services/studentsService.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class homeScreen extends StatefulWidget {
@@ -18,8 +20,9 @@ class _homeScreenState extends State<homeScreen> {
   late CalendarFormat _calendarFormat;
   late DateTime _focusedDay;
   late DateTime _selectedDay;
-  Map<DateTime, List<CalenderAdd>> absentDays = {};
 
+  Map<DateTime, List<CalenderAdd>> absentDays = {};
+  List<String> userData = [];
   void loadAbsentDates(List<Students> studentlist) {
     absentDays.clear();
     for (var attendance in studentlist) {
@@ -40,13 +43,19 @@ class _homeScreenState extends State<homeScreen> {
     _calendarFormat = CalendarFormat.month;
     _focusedDay = DateTime.now();
     _selectedDay = _focusedDay;
-    getsStudents().then(
-      (value) {
-        setState(() {
-          loadAbsentDates(value);
-        });
-      },
-    );
+    final userProvider = Provider.of<Usersprovider>(context, listen: false);
+    userProvider.fetchDate();
+    if (absentDays.isEmpty) {
+      getsStudents().then(
+        (value) {
+          setState(() {
+            loadAbsentDates(value);
+          });
+        },
+      );
+    } else {
+      print("absent data is loaded");
+    }
   }
 
   @override

@@ -1,14 +1,23 @@
 import 'package:absensi_app/navigationScreen.dart';
 import 'package:absensi_app/pages/loginscreen.dart';
+import 'package:absensi_app/provider/usersprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:provider/provider.dart';
 import 'services/auth.dart';
 
 void main() async {
   String? token = await Auth().getToken();
 
-  runApp(MyApp(
-    token: token,
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => Usersprovider(),
+      )
+    ],
+    child: MyApp(
+      token: token,
+    ),
   ));
 }
 

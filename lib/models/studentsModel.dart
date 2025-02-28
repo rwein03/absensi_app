@@ -13,7 +13,7 @@ class Students {
   List<Attendance>? attendances;
 
   Students({
-    this.student_id = null,
+    this.student_id,
     required this.firstName,
     required this.lastName,
     required this.grade,
@@ -36,8 +36,7 @@ class Students {
         status: json["status"],
         class_id: json["class_id"],
         attendances: List<Attendance>.from(
-                json["attendances"].map((x) => Attendance.fromJson(x))) ??
-            [],
+            json["attendances"].map((x) => Attendance.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {

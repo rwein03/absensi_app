@@ -28,6 +28,7 @@ class _ClassesPageState extends State<ClassesPage> {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
+                  // ignore: deprecated_member_use
                   color: Colors.black.withOpacity(0.3),
                   offset: Offset(0, 1),
                   blurRadius: 5,
