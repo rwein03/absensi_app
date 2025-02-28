@@ -26,7 +26,10 @@ class _LoginPagesState extends State<LoginPages> with TickerProviderStateMixin {
   TextEditingController passwordController = TextEditingController();
   late final AnimationController _controller;
 
+  bool isloading = false;
+
   Future<bool> handleLogin() async {
+    isloading == true;
     Login loginData = Login(
         username: usernameController.value.text.trim(),
         password: passwordController.value.text.trim());
@@ -73,9 +76,8 @@ class _LoginPagesState extends State<LoginPages> with TickerProviderStateMixin {
         children: [
           Center(
             child: Container(
-              height: screenHeight / 2.5,
               width: 350,
-              padding: EdgeInsets.all(12),
+              padding: EdgeInsets.symmetric(vertical: 60, horizontal: 12),
               decoration: BoxDecoration(
                 border: Border.all(width: 1, color: Colors.grey),
                 borderRadius: BorderRadius.circular(25),
@@ -88,6 +90,8 @@ class _LoginPagesState extends State<LoginPages> with TickerProviderStateMixin {
                 ],
               ),
               child: Column(
+                spacing: 15,
+                mainAxisSize: (MainAxisSize.min),
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -95,27 +99,34 @@ class _LoginPagesState extends State<LoginPages> with TickerProviderStateMixin {
                       textAlign: TextAlign.left, style: AppStyle.titleText),
                   Text("Please Sign in!",
                       textAlign: TextAlign.left, style: AppStyle.subTitle),
-                  SizedBox(height: 20),
                   EditloginWidget(
                     labelText: 'Username',
                     controller: usernameController,
                     icon: Icons.person_pin,
                   ),
-                  SizedBox(height: 20),
                   EditloginWidget(
                     labelText: 'Password',
                     controller: passwordController,
                     icon: Icons.password,
                     isPassword: true,
                   ),
-                  buttonLogin(
-                    () async {
-                      final success = await handleLogin();
-                      if (success) {
-                        setState(() {});
-                      }
-                    },
-                  )
+                  isloading
+                      ? Center(
+                          child: CircularProgressIndicator(
+                              // padding: EdgeInsets.only(top: 30),
+                              ),
+                        )
+                      : buttonLogin(
+                          () async {
+                            setState(() {
+                              isloading = true; // Show loading indicator
+                            });
+                            await handleLogin();
+                            setState(() {
+                              isloading = false; // Hide loading indicator
+                            });
+                          },
+                        )
                 ],
               ),
             ),
