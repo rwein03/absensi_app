@@ -2,10 +2,8 @@
 
 import 'package:absensi_app/models/dataCalender.dart';
 import 'package:absensi_app/models/studentsModel.dart';
-import 'package:absensi_app/provider/usersprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:absensi_app/services/studentsService.dart';
-import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class homeScreen extends StatefulWidget {
@@ -43,10 +41,8 @@ class _homeScreenState extends State<homeScreen> {
     _calendarFormat = CalendarFormat.month;
     _focusedDay = DateTime.now();
     _selectedDay = _focusedDay;
-    final userProvider = Provider.of<Usersprovider>(context, listen: false);
-    userProvider.fetchDate();
     if (absentDays.isEmpty) {
-      getsStudents().then(
+      APIstudent().getsStudents().then(
         (value) {
           setState(() {
             loadAbsentDates(value);

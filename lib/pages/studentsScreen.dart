@@ -2,6 +2,7 @@
 
 import 'package:absensi_app/AppStyle.dart';
 import 'package:absensi_app/models/studentsModel.dart';
+import 'package:absensi_app/provider/classesprovider.dart';
 import 'package:absensi_app/services/studentsService.dart';
 import 'package:absensi_app/widgets/alertdialog.dart';
 import 'package:absensi_app/widgets/dropdownitemlist.dart';
@@ -10,6 +11,7 @@ import 'package:absensi_app/widgets/edittitle.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
 
 class studentsPage extends StatefulWidget {
@@ -32,12 +34,13 @@ class _studentsPageState extends State<studentsPage> {
   String? selectedsection;
   String? selectedActive;
   DateTime? selectedDate;
+  int? selectedClassid;
 
   final _formKey = GlobalKey<FormState>();
 
   Future<void> checkValid() async {
     if (_formKey.currentState!.validate()) {
-      final studentPost = await insertStudent(Students(
+      final studentPost = await APIstudent().insertStudent(Students(
         firstName: firstname.text,
         lastName: lastname.text,
         grade: selectedgrade.toString(),
@@ -45,11 +48,11 @@ class _studentsPageState extends State<studentsPage> {
         dateOfBirth: DateFormat("yyyy-MM-dd").parse(datepicker.text),
         parentContact: parentcontact.text,
         status: selectedActive.toString(),
-        class_id: 2,
+        class_id: selectedClassid!,
         attendances: [],
       ));
       if (studentPost) {
-        clear();
+        // clear();
         alertDialog(
             context, "Confirmation", "Student added", QuickAlertType.info);
       } else {}
@@ -61,9 +64,6 @@ class _studentsPageState extends State<studentsPage> {
     lastname.clear();
     parentcontact.clear();
     datepicker.clear();
-    selectedgrade = null;
-    selectedsection = null;
-    selectedActive = null;
   }
 
   @override
@@ -75,8 +75,15 @@ class _studentsPageState extends State<studentsPage> {
     super.dispose();
   }
 
+  Future<void> refreshData() async {
+    final classprovider = Provider.of<Classesprovider>(context, listen: false);
+    await classprovider.fetchClasses(context);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final classesproviderdata = Provider.of<Classesprovider>(context);
+
     return Scaffold(
       body: Form(
         key: _formKey,
@@ -161,6 +168,27 @@ class _studentsPageState extends State<studentsPage> {
                   obstruct: false,
                   controller: parentcontact,
                 ),
+                classesproviderdata.isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : DropdownItemList(
+                        isrefreshed: true,
+                        onRefreshed: refreshData,
+                        listitem: classesproviderdata.classes
+                            .map(
+                              (e) => e.className,
+                            )
+                            .toList(),
+                        titlebox: "Class",
+                        onChanged: (Value) {
+                          final selectedclass =
+                              classesproviderdata.classes.firstWhere(
+                            (element) => element.className == Value,
+                          );
+                          setState(() {
+                            selectedClassid = selectedclass.class_id!;
+                          });
+                        },
+                      ),
                 DropdownItemList(
                   listitem: isActive,
                   titlebox: "Status",

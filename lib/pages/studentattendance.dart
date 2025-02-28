@@ -23,7 +23,7 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
   @override
   void initState() {
     super.initState();
-    getStudentDatas = getsStudents();
+    getStudentDatas = APIstudent().getsStudents();
   }
 
   @override
@@ -46,7 +46,7 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
           children: [
             Expanded(
               child: FutureBuilder(
-                future: getsStudents(),
+                future: APIstudent().getsStudents(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
@@ -133,7 +133,7 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
 Future<void> SendData(List<Storedata> listabsent) async {
   final futures = listabsent
       .map(
-        (element) => postAttendance(
+        (element) => APIattendance().postAttendance(
           Attendance(
             student_id: element.student_id,
             date: element.date,

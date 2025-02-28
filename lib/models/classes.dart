@@ -1,17 +1,20 @@
-class Class {
-  String className;
-  String grade;
-  String section;
-  int user_id;
+class Classes {
+  int? class_id;
+  String? className;
+  String? grade;
+  String? section;
+  int? user_id;
 
-  Class({
+  Classes({
+    required this.class_id,
     required this.className,
     required this.grade,
     required this.section,
     required this.user_id,
   });
 
-  factory Class.fromJson(Map<String, dynamic> json) => Class(
+  factory Classes.fromJson(Map<String, dynamic> json) => Classes(
+        class_id: json["class_id"],
         className: json["class_name"],
         grade: json["grade"],
         section: json["section"],
@@ -19,6 +22,7 @@ class Class {
       );
 
   Map<String, dynamic> toJson() => {
+        "class_id": class_id,
         "class_name": className,
         "grade": grade,
         "section": section,

@@ -3,6 +3,7 @@
 import 'package:absensi_app/AppStyle.dart';
 import 'package:absensi_app/models/loginModel.dart';
 import 'package:absensi_app/navigationScreen.dart';
+import 'package:absensi_app/provider/classesprovider.dart';
 import 'package:absensi_app/provider/usersprovider.dart';
 import 'package:absensi_app/widgets/alertdialog.dart';
 import 'package:absensi_app/widgets/login/buttonlogin.dart';
@@ -29,8 +30,13 @@ class _LoginPagesState extends State<LoginPages> with TickerProviderStateMixin {
     Login loginData = Login(
         username: usernameController.value.text.trim(),
         password: passwordController.value.text.trim());
-    bool success = await loginUser(loginData);
+    bool success = await APIlogin().loginUser(loginData);
     if (success) {
+      final userProvider = Provider.of<Usersprovider>(context, listen: false);
+      final classesprovider =
+          Provider.of<Classesprovider>(context, listen: false);
+      await userProvider.fetchUsers(context);
+      await classesprovider.fetchClasses(context);
       Navigator.push(
           context,
           MaterialPageRoute(
