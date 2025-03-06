@@ -1,5 +1,6 @@
 import 'package:absensi_app/navigationScreen.dart';
 import 'package:absensi_app/pages/loginscreen.dart';
+import 'package:absensi_app/provider/attendanceprovider.dart';
 import 'package:absensi_app/provider/classesprovider.dart';
 import 'package:absensi_app/provider/usersprovider.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,9 @@ void main() async {
       ),
       ChangeNotifierProvider(
         create: (context) => Classesprovider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => Attendanceprovider(),
       )
     ],
     child: MyApp(

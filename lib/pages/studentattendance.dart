@@ -3,10 +3,12 @@
 import 'package:absensi_app/AppStyle.dart';
 import 'package:absensi_app/models/storeData.dart';
 import 'package:absensi_app/models/studentsModel.dart';
+import 'package:absensi_app/provider/attendanceprovider.dart';
 import 'package:absensi_app/services/attendanceService.dart';
 import 'package:absensi_app/services/studentsService.dart';
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
+import 'package:provider/provider.dart';
 
 class StudentattendancePage extends StatefulWidget {
   const StudentattendancePage({super.key});
@@ -17,6 +19,7 @@ class StudentattendancePage extends StatefulWidget {
 
 class _StudentattendancePageState extends State<StudentattendancePage> {
   late Future<List<Students>> getStudentDatas;
+  final controller = GroupButtonController();
   List<Storedata> listabsent = [];
   DateTime today = DateTime.now();
 
@@ -28,6 +31,8 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
 
   @override
   Widget build(BuildContext context) {
+    final addabsent = Provider.of<Attendanceprovider>(context, listen: false);
+    final indexselect = controller.selectIndex(1);
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(20),
@@ -85,18 +90,16 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
                                   ),
                                   GroupButton(
                                     isRadio: true,
+                                    controller: controller,
                                     onSelected: (value, index, isSelected) {
                                       String reasson = "student.student_id";
-                                      listabsent.removeWhere(
-                                        (element) =>
-                                            element.student_id ==
-                                            student.student_id,
-                                      );
-                                      listabsent.add(Storedata(
-                                          student_id: student.student_id!,
-                                          date: DateTime.now(),
-                                          status: value,
-                                          reasson: reasson));
+                                      addabsent.addAbsent(
+                                          context,
+                                          Storedata(
+                                              student_id: student.student_id!,
+                                              date: DateTime.now(),
+                                              status: value,
+                                              reasson: ""));
                                     },
                                     enableDeselect: true,
                                     options: GroupButtonOptions(

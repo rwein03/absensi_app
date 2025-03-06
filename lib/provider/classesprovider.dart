@@ -17,7 +17,6 @@ class Classesprovider extends ChangeNotifier {
 
     try {
       _classes = await APIclasses().getClasses();
-      alertDialog(context, "Success", "Class added", QuickAlertType.info);
     } catch (e) {
       alertDialog(
           context, "Error", "Error Fetching Class", QuickAlertType.error);
