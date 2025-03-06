@@ -20,7 +20,6 @@ class _homeScreenState extends State<homeScreen> {
   late DateTime _selectedDay;
 
   Map<DateTime, List<CalenderAdd>> absentDays = {};
-  List<String> userData = [];
   void loadAbsentDates(List<Students> studentlist) {
     absentDays.clear();
     for (var attendance in studentlist) {
