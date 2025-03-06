@@ -19,7 +19,7 @@ class StudentattendancePage extends StatefulWidget {
 
 class _StudentattendancePageState extends State<StudentattendancePage> {
   late Future<List<Students>> getStudentDatas;
-  final controller = GroupButtonController();
+  Map<int, GroupButtonController> controller = {};
   List<Storedata> listabsent = [];
   DateTime today = DateTime.now();
 
@@ -32,7 +32,6 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
   @override
   Widget build(BuildContext context) {
     final addabsent = Provider.of<Attendanceprovider>(context, listen: false);
-    final indexselect = controller.selectIndex(1);
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(20),
@@ -90,9 +89,8 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
                                   ),
                                   GroupButton(
                                     isRadio: true,
-                                    controller: controller,
+                                    controller: controller[student.student_id!],
                                     onSelected: (value, index, isSelected) {
-                                      String reasson = "student.student_id";
                                       addabsent.addAbsent(
                                           context,
                                           Storedata(

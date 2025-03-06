@@ -85,132 +85,135 @@ class _studentsPageState extends State<studentsPage> {
     final classesproviderdata = Provider.of<Classesprovider>(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Form(
         key: _formKey,
         child: Center(
-          child: Container(
-            padding: EdgeInsets.all(30),
-            margin: EdgeInsets.all(30),
-            decoration: BoxDecoration(
-                border: Border.all(width: 1),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    offset: Offset(0, 1),
-                    blurRadius: 5,
-                    spreadRadius: 2,
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.all(30),
+              margin: EdgeInsets.all(30),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      offset: Offset(0, 1),
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(15)),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 12,
+                children: [
+                  Text(
+                    "Register Student Form",
+                    style: AppStyle.formTitle,
                   ),
+                  Row(
+                    spacing: 5,
+                    children: [
+                      Flexible(
+                        child: EditTitleWidget(
+                          title: "Firstname",
+                          icon: Icons.person_pin,
+                          obstruct: false,
+                          controller: firstname,
+                        ),
+                      ),
+                      Flexible(
+                        child: EditTitleWidget(
+                          title: "lastname",
+                          icon: Icons.numbers,
+                          obstruct: false,
+                          controller: lastname,
+                        ),
+                      )
+                    ],
+                  ),
+                  Row(
+                    spacing: 5,
+                    children: [
+                      Flexible(
+                        child: DropdownItemList(
+                          listitem: grades,
+                          titlebox: 'Grade',
+                          onChanged: (value) {
+                            setState(() {
+                              selectedgrade = value;
+                            });
+                          },
+                        ),
+                      ),
+                      Flexible(
+                        child: DropdownItemList(
+                          listitem: section,
+                          titlebox: 'Section',
+                          onChanged: (value) {
+                            setState(() {
+                              selectedsection = value;
+                            });
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                  Datetimepicker(
+                      controller: datepicker, title: 'Date of Birthday'),
+                  EditTitleWidget(
+                    title: "Parent contact",
+                    icon: Icons.numbers,
+                    obstruct: false,
+                    controller: parentcontact,
+                  ),
+                  classesproviderdata.isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : DropdownItemList(
+                          isrefreshed: true,
+                          onRefreshed: refreshData,
+                          listitem: classesproviderdata.classes
+                              .map(
+                                (e) => e.className,
+                              )
+                              .toList(),
+                          titlebox: "Class",
+                          onChanged: (Value) {
+                            final selectedclass =
+                                classesproviderdata.classes.firstWhere(
+                              (element) => element.className == Value,
+                            );
+                            setState(() {
+                              selectedClassid = selectedclass.class_id!;
+                            });
+                          },
+                        ),
+                  DropdownItemList(
+                    listitem: isActive,
+                    titlebox: "Status",
+                    onChanged: (Value) {
+                      setState(() {
+                        selectedActive = Value;
+                      });
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: () => checkValid(),
+                    style: ElevatedButton.styleFrom(
+                      fixedSize:
+                          Size.fromWidth(AppStyle(context).widthScreen / 2),
+                      backgroundColor: Colors.blueGrey.shade50,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text("Save"),
+                  )
                 ],
-                borderRadius: BorderRadius.circular(15)),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 12,
-              children: [
-                Text(
-                  "Register Student Form",
-                  style: AppStyle.formTitle,
-                ),
-                Row(
-                  spacing: 5,
-                  children: [
-                    Flexible(
-                      child: EditTitleWidget(
-                        title: "Firstname",
-                        icon: Icons.person_pin,
-                        obstruct: false,
-                        controller: firstname,
-                      ),
-                    ),
-                    Flexible(
-                      child: EditTitleWidget(
-                        title: "lastname",
-                        icon: Icons.numbers,
-                        obstruct: false,
-                        controller: lastname,
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  spacing: 5,
-                  children: [
-                    Flexible(
-                      child: DropdownItemList(
-                        listitem: grades,
-                        titlebox: 'Grade',
-                        onChanged: (value) {
-                          setState(() {
-                            selectedgrade = value;
-                          });
-                        },
-                      ),
-                    ),
-                    Flexible(
-                      child: DropdownItemList(
-                        listitem: section,
-                        titlebox: 'Section',
-                        onChanged: (value) {
-                          setState(() {
-                            selectedsection = value;
-                          });
-                        },
-                      ),
-                    )
-                  ],
-                ),
-                Datetimepicker(
-                    controller: datepicker, title: 'Date of Birthday'),
-                EditTitleWidget(
-                  title: "Parent contact",
-                  icon: Icons.numbers,
-                  obstruct: false,
-                  controller: parentcontact,
-                ),
-                classesproviderdata.isLoading
-                    ? Center(child: CircularProgressIndicator())
-                    : DropdownItemList(
-                        isrefreshed: true,
-                        onRefreshed: refreshData,
-                        listitem: classesproviderdata.classes
-                            .map(
-                              (e) => e.className,
-                            )
-                            .toList(),
-                        titlebox: "Class",
-                        onChanged: (Value) {
-                          final selectedclass =
-                              classesproviderdata.classes.firstWhere(
-                            (element) => element.className == Value,
-                          );
-                          setState(() {
-                            selectedClassid = selectedclass.class_id!;
-                          });
-                        },
-                      ),
-                DropdownItemList(
-                  listitem: isActive,
-                  titlebox: "Status",
-                  onChanged: (Value) {
-                    setState(() {
-                      selectedActive = Value;
-                    });
-                  },
-                ),
-                ElevatedButton(
-                  onPressed: () => checkValid(),
-                  style: ElevatedButton.styleFrom(
-                    fixedSize:
-                        Size.fromWidth(AppStyle(context).widthScreen / 2),
-                    backgroundColor: Colors.blueGrey.shade50,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Text("Save"),
-                )
-              ],
+              ),
             ),
           ),
         ),

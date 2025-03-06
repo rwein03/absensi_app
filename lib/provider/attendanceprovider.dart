@@ -20,11 +20,13 @@ class Attendanceprovider extends ChangeNotifier {
           entry.date.toIso8601String().substring(0, 10) ==
               storedata.date.toIso8601String().substring(0, 10));
 
-      _attendance.add(storedata);
-      notifyListeners();
       if (!exists) {
+        _attendance.add(storedata);
+        notifyListeners();
       } else {
-        print("Duplicate entry found, not adding.");
+        _attendance.firstWhere(
+          (element) => element.student_id == storedata.student_id,
+        );
       }
     } catch (e) {
       alertDialog(

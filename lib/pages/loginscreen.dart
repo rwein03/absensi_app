@@ -71,8 +71,10 @@ class _LoginPagesState extends State<LoginPages> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         alignment: Alignment.center,
+        clipBehavior: Clip.none,
         children: [
           Center(
             child: Container(
@@ -132,19 +134,21 @@ class _LoginPagesState extends State<LoginPages> with TickerProviderStateMixin {
             ),
           ),
           Positioned(
-            top: screenHeight / 5.5 - 0.2,
-            child: Lottie.asset(
-              width: 200,
-              height: 200,
-              'lib/assets/loginAnimation.json',
-              controller: _controller,
-              onLoaded: (composition) {
-                // Configure the AnimationController with the duration of the
-                // Lottie file and start the animation.
-                _controller
-                  ..duration = composition.duration
-                  ..forward();
-              },
+            top: screenHeight / 5.5,
+            child: Align(
+              child: Lottie.asset(
+                width: 200,
+                height: 200,
+                'lib/assets/loginAnimation.json',
+                controller: _controller,
+                onLoaded: (composition) {
+                  // Configure the AnimationController with the duration of the
+                  // Lottie file and start the animation.
+                  _controller
+                    ..duration = composition.duration
+                    ..forward();
+                },
+              ),
             ),
           ),
         ],

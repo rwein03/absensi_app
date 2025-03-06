@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 import 'services/auth.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Future.delayed(const Duration(milliseconds: 3000), () {});
   String? token = await Auth().getToken();
 
   runApp(MultiProvider(
