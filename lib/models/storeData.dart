@@ -4,14 +4,14 @@ class Storedata {
   final int student_id;
   final DateTime date;
   final String status;
-  final String reasson;
+  String? reasson;
   final String? supporting_document;
 
   Storedata({
     required this.student_id,
     required this.date,
     required this.status,
-    required this.reasson,
+    this.reasson,
     this.supporting_document,
   });
 

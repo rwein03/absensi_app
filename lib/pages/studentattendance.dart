@@ -6,6 +6,7 @@ import 'package:absensi_app/models/studentsModel.dart';
 import 'package:absensi_app/provider/attendanceprovider.dart';
 import 'package:absensi_app/services/attendanceService.dart';
 import 'package:absensi_app/services/studentsService.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 import 'package:provider/provider.dart';
@@ -20,8 +21,9 @@ class StudentattendancePage extends StatefulWidget {
 class _StudentattendancePageState extends State<StudentattendancePage> {
   late Future<List<Students>> getStudentDatas;
   Map<int, GroupButtonController> controller = {};
-  List<Storedata> listabsent = [];
+  // List<Storedata> listabsent = [];
   DateTime today = DateTime.now();
+  TextEditingController reasonController = TextEditingController();
 
   @override
   void initState() {
@@ -47,6 +49,8 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
             ],
             borderRadius: BorderRadius.circular(12)),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 12,
           children: [
             Expanded(
               child: FutureBuilder(
@@ -63,66 +67,78 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
                   final students = snapshot.data!;
                   if (snapshot.connectionState == ConnectionState.waiting) {}
                   return ListView.builder(
-                      itemCount: students.length,
-                      itemBuilder: (context, index) {
-                        final student = students[index];
-                        var dateListAbsents = student.attendances!.where(
-                          (element) {
-                            return element.date == DateUtils.dateOnly(today);
-                          },
-                        ).toList();
-                        if (dateListAbsents.isNotEmpty) {
-                          return Center(
-                              child: Text("Already absences on this day"));
-                        } else {
-                          return Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    "${student.firstName} ${student.lastName}",
-                                    style: AppStyle.smalltitle
-                                        .copyWith(fontSize: 15),
-                                  ),
-                                  Expanded(
-                                    child: SizedBox(),
-                                  ),
-                                  GroupButton(
-                                    isRadio: true,
-                                    controller: controller[student.student_id!],
-                                    onSelected: (value, index, isSelected) {
-                                      addabsent.addAbsent(
-                                          context,
-                                          Storedata(
-                                              student_id: student.student_id!,
-                                              date: DateTime.now(),
-                                              status: value,
-                                              reasson: ""));
-                                    },
-                                    enableDeselect: true,
-                                    options: GroupButtonOptions(
-                                        unselectedTextStyle:
-                                            TextStyle(fontSize: 10),
-                                        selectedTextStyle: TextStyle(
-                                            fontSize: 12, color: Colors.white),
-                                        buttonHeight: 30,
-                                        buttonWidth: 60,
-                                        borderRadius: BorderRadius.circular(5)),
-                                    buttons: [
-                                      "Absent",
-                                      "Late",
-                                      "Excused",
-                                    ],
-                                  )
-                                ],
-                              ),
-                              Divider(),
-                            ],
-                          );
-                        }
-                      });
+                    itemCount: students.length,
+                    itemBuilder: (context, index) {
+                      final student = students[index];
+                      final selectedIndex =
+                          addabsent.getSelectedIndex(student.student_id!);
+                      controller.putIfAbsent(
+                          student.student_id!, () => GroupButtonController());
+                      controller[student.student_id!]!
+                          .selectIndex(selectedIndex);
+                      var dateListAbsents = student.attendances!.where(
+                        (element) {
+                          return element.date == DateUtils.dateOnly(today);
+                        },
+                      ).toList();
+                      if (dateListAbsents.isNotEmpty) {
+                        return Center(
+                            child: Text("Already absences on this day"));
+                      } else {
+                        return Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "${student.firstName} ${student.lastName}",
+                                  style: AppStyle.smalltitle
+                                      .copyWith(fontSize: 15),
+                                ),
+                                Expanded(
+                                  child: SizedBox(),
+                                ),
+                                GroupButton(
+                                  isRadio: true,
+                                  controller: controller[student.student_id!],
+                                  onSelected: (value, index, isSelected) {
+                                    addabsent.addAbsent(
+                                        context,
+                                        Storedata(
+                                            student_id: student.student_id!,
+                                            date: DateTime.now(),
+                                            status: value,
+                                            reasson: ""));
+                                    print(addabsent.listAbsent.toList());
+                                  },
+                                  enableDeselect: true,
+                                  options: GroupButtonOptions(
+                                      unselectedTextStyle:
+                                          TextStyle(fontSize: 10),
+                                      selectedTextStyle: TextStyle(
+                                          fontSize: 12, color: Colors.white),
+                                      buttonHeight: 30,
+                                      buttonWidth: 60,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  buttons: [
+                                    "Absent",
+                                    "Late",
+                                    "Excused",
+                                  ],
+                                )
+                              ],
+                            ),
+                            Divider(),
+                          ],
+                        );
+                      }
+                    },
+                  );
                 },
               ),
+            ),
+            TextButton(
+              child: Text("Save"),
+              onPressed: () => SendData(context, addabsent.listAbsent),
             ),
           ],
         ),
@@ -131,7 +147,8 @@ class _StudentattendancePageState extends State<StudentattendancePage> {
   }
 }
 
-Future<void> SendData(List<Storedata> listabsent) async {
+Future<void> SendData(BuildContext context, List<Storedata> listabsent) async {
+  print(listabsent);
   final futures = listabsent
       .map(
         (element) => APIattendance().postAttendance(
@@ -145,6 +162,8 @@ Future<void> SendData(List<Storedata> listabsent) async {
         ),
       )
       .toList();
+  final clearProvider = Provider.of<Attendanceprovider>(context, listen: false);
+  clearProvider.clearAbsentList();
 
   final results = await Future.wait(futures);
 }
